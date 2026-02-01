@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixIt Now - Pro Full Version</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --pending: #FFC107; --progress: #2196F3; --success: #4CAF50; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); margin: 0; padding: 0; }
+        
+        /* 1. Login Page */
+        #login-page { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .login-card { background: white; width: 85%; max-width: 360px; padding: 40px 30px; border-radius: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .login-group { text-align: left; margin-bottom: 15px; }
+        .login-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #666; font-size: 0.9rem; }
+        .login-group input { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box; }
+        .btn-login { width: 100%; padding: 14px; background: #2196F3; color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+
+        /* 2. Header & Dropdown */
+        #main-app { display: none; padding-bottom: 80px; }
+        header { 
+            background: #2196F3; color: white; padding: 15px 20px; 
+            font-weight: bold; position: sticky; top: 0; z-index: 1500;
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .profile-btn { font-size: 1.8rem; cursor: pointer; position: relative; }
+        #user-dropdown {
+            display: none; position: absolute; right: 0; top: 50px;
+            background: white; min-width: 220px; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #eee;
+            z-index: 2000; overflow: hidden;
+        }
+        .dropdown-content { display: flex; flex-direction: column; padding: 15px; gap: 12px; }
+        .user-info { text-align: center; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .user-info b { display: block; color: #333; font-size: 1rem; }
+        .user-info small { color: #2196F3; font-weight: bold; font-size: 0.85rem; }
+        .logout-btn-box { background: #fff5f5; color: #d32f2f; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: bold; font-size: 0.9rem; }
+
+        /* 3. Form & Dashboard Layout */
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .page { display: none; }
+        .active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+
+        /* Dashboard Stats */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-box { padding: 15px; border-radius: 12px; text-align: center; color: white; }
+        .bg-pending { background: var(--pending); }
+        .bg-success { background: var(--success); }
+        .stat-box b { font-size: 1.8rem; display: block; }
+
+        /* 4. Repair List & Cards */
+        .repair-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 8px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; }
+        .status-1 { border-left-color: var(--pending); }
+        .status-2 { border-left-color: var(--progress); }
+        .status-3 { border-left-color: var(--success); }
+        .badge { float: right; padding: 4px 10px; border-radius: 15px; font-size: 0.7rem; font-weight: bold; }
+        .badge-1 { background: #FFF9C4; color: #856404; }
+        .badge-2 { background: #BBDEFB; color: #0D47A1; }
+        .badge-3 { background: #C8E6C9; color: #1B5E20; }
+        .proof-img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-top: 10px; }
+
+        /* 5. Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; padding: 12px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; color: #aaa; font-size: 0.75rem; cursor: pointer; }
+        .nav-item.active-nav { color: #2196F3; }
+        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 3px; }
+
+        /* 6. Modal Admin */
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: white; width: 85%; max-width: 400px; margin: 15vh auto; padding: 25px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="login-page">
+    <div class="login-card">
+        <i class="fa fa-wrench" style="font-size: 50px; color: #2196F3; margin-bottom: 10px;"></i>
+        <h2>FixIt Now</h2>
+        <div class="login-group">
+            <label>Username</label>
+            <input type="text" id="u-input" placeholder="user1 หรือ admin1">
+        </div>
+        <div class="login-group">
+            <label>Password</label>
+            <input type="password" id="p-input" placeholder="1111 หรือ 9999">
+        </div>
+        <button class="btn-login" onclick="checkAuth()">เข้าสู่ระบบ</button>
+        <p id="l-err" style="color:red; display:none; margin-top:10px;">รหัสผ่านไม่ถูกต้อง!</p>
+    </div>
+</div>
+
+<div id="main-app">
+    <header>
+        <div style="width: 40px;"></div> 
+        <span id="header-title">FixIt Now</span>
+        <div class="profile-btn" id="profileBtn">
+            <i class="fa fa-user-circle"></i>
+            <div id="user-dropdown">
+                <div class="dropdown-content">
+                    <div class="user-info">
+                        <b id="display-name">ชื่อผู้ใช้งาน</b>
+                        <small id="display-role">ตำแหน่ง</small>
+                    </div>
+                    <div class="logout-btn-box" onclick="logout()">
+                        <i class="fa fa-sign-out-alt"></i>
+                        <span>ออกจากระบบ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="p-main" class="page active">
+            </div>
+
+        <div id="p-list" class="page">
+            <div id="admin-tools" style="display:none; margin-bottom:15px;">
+                <input type="text" id="search" placeholder="ค้นหาชื่อหรือเลขงาน..." onkeyup="render()" style="margin-bottom:10px; width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
+            </div>
+            <div id="list-container"></div>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active-nav" id="nav-home" onclick="updateMainContent()">
+            <i id="nav-icon" class="fa fa-edit"></i><span id="nav-text">แจ้งซ่อม</span>
+        </div>
+        <div class="nav-item" onclick="show('p-list','รายการทั้งหมด',this)">
+            <i class="fa fa-tasks"></i>รายการ
+        </div>
+    </nav>
+</div>
+
+<div id="admin-modal" class="modal">
+    <div class="modal-content">
+        <h3>อัปเดตงาน #<span id="m-job-no"></span></h3>
+        <input type="hidden" id="m-id">
+        <div class="input-group">
+            <label>เปลี่ยนสถานะ</label>
+            <select id="m-status">
+                <option value="1">🟡 รอดำเนินการ</option>
+                <option value="2">🔵 กำลังซ่อม</option>
+                <option value="3">🟢 ซ่อมเสร็จแล้ว</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>รูปภาพหลักฐาน</label>
+            <input type="file" id="m-img" accept="image/*" capture="environment">
+        </div>
+        <div class="input-group">
+            <label>หมายเหตุ</label>
+            <textarea id="m-note" rows="2"></textarea>
+        </div>
+        <button class="btn-login" onclick="saveUpdate()">บันทึกข้อมูล</button>
+        <button onclick="document.getElementById('admin-modal').style.display='none'" style="width:100%; background:none; border:none; margin-top:10px; color:grey;">ยกเลิก</button>
+    </div>
+</div>
+
+<script>
+    const usersDB = {
+        "user1": { pass: "1111", role: "user", name: "คุณสมชาย" },
+        "admin1": { pass: "9999", role: "admin", name: "ช่างวิชัย" }
+    };
+    
+    let currentRole = "";
+    let repairs = JSON.parse(localStorage.getItem('fixit_final_full_db')) || [];
+
+    // --- Dropdown Logic ---
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('user-dropdown');
+    profileBtn.onclick = (e) => { e.stopPropagation(); dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block'; };
+    document.onclick = () => dropdown.style.display = 'none';
+
+    function checkAuth() {
+        const u = document.getElementById('u-input').value;
+        const p = document.getElementById('p-input').value;
+        if(usersDB[u] && usersDB[u].pass === p) {
+            currentRole = usersDB[u].role;
+            document.getElementById('display-name').innerText = usersDB[u].name;
+            document.getElementById('display-role').innerText = currentRole === 'admin' ? "แอดมิน/ช่าง" : "พนักงานทั่วไป";
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            updateMainContent();
+        } else { document.getElementById('l-err').style.display = 'block'; }
+    }
+
+    // ฟังก์ชันจัดการเนื้อหาหน้าหลักตาม Role
+    function updateMainContent() {
+        const pMain = document.getElementById('p-main');
+        const navText = document.getElementById('nav-text');
+        const navIcon = document.getElementById('nav-icon');
+
+        if(currentRole === 'admin') {
+            navText.innerText = "สรุปผล";
+            navIcon.className = "fa fa-chart-pie";
+            const pending = repairs.filter(j => j.status === 1).length;
+            const completed = repairs.filter(j => j.status === 3).length;
+            pMain.innerHTML = `
+                <div class="card" style="text-align:center;">
+                    <h3>📊 ภาพรวมระบบแจ้งซ่อม</h3>
+                    <div class="stat-grid">
+                        <div class="stat-box bg-pending"><b>${pending}</b><small>งานค้าง</small></div>
+                        <div class="stat-box bg-success"><b>${completed}</b><small>ซ่อมเสร็จ</small></div>
+                    </div>
+                    <div style="margin-top:20px; text-align:left;">
+                        <label>ประสิทธิภาพการซ่อม: <b>${repairs.length ? Math.round((completed/repairs.length)*100) : 0}%</b></label>
+                        <div style="background:#eee; height:10px; border-radius:5px; margin-top:5px;">
+                            <div style="background:#4CAF50; width:${repairs.length ? (completed/repairs.length)*100 : 0}%; height:100%; border-radius:5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('admin-tools').style.display = 'block';
+        } else {
+            navText.innerText = "แจ้งซ่อม";
+            navIcon.className = "fa fa-edit";
+            pMain.innerHTML = `
+                <div class="card">
+                    <h3>📝 รายละเอียดการแจ้งปัญหา</h3>
+                    <form id="repair-form" onsubmit="handleFormSubmit(event)">
+                        <div class="input-group"><label>ชื่อผู้แจ้ง</label><input type="text" id="f-name" placeholder="ระบุชื่อ-นามสกุล" required></div>
+                        <div class="input-group"><label>แผนก / ชั้น</label><select id="f-dept"><option>ไอที / คอมพิวเตอร์</option><option>ธุรการ / ประชาสัมพันธ์</option><option>บัญชี / การเงิน</option><option>อาคาร / ส่วนกลาง</option></select></div>
+                        <div class="input-group"><label>ประเภทปัญหา</label><select id="f-type"><option>คอมพิวเตอร์/ไอที</option><option>เครื่องใช้ไฟฟ้า</option><option>งานประปา</option></select></div>
+                        <div class="input-group"><label>รายละเอียดปัญหา</label><textarea id="f-detail" rows="3" placeholder="ระบุอาการชำรุด..." required></textarea></div>
+                        <button type="submit" class="btn-login">ส่งข้อมูลแจ้งซ่อม</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('admin-tools').style.display = 'none';
+        }
+        show('p-main', navText.innerText, document.getElementById('nav-home'));
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const job = { id: Date.now(), jobNo: 'F'+Math.floor(1000+Math.random()*9000), name: document.getElementById('f-name').value, dept: document.getElementById('f-dept').value, type: document.getElementById('f-type').value, detail: document.getElementById('f-detail').value, status: 1, date: new Date().toLocaleDateString('th-TH'), note: '', img: '' };
+        repairs.unshift(job);
+        localStorage.setItem('fixit_final_full_db', JSON.stringify(repairs));
+        alert('ส่งเรื่องแจ้งซ่อมเรียบร้อย!');
+        show('p-list', 'รายการทั้งหมด', document.querySelectorAll('.nav-item')[1]);
+    }
+
+    function show(pageId, title, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        document.getElementById('header-title').innerText = title;
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+        el.classList.add('active-nav');
+        if(pageId === 'p-list') render();
+    }
+
+    function render() {
+        const cont = document.getElementById('list-container');
+        const sVal = document.getElementById('search').value.toLowerCase();
+        cont.innerHTML = '';
+        const labels = { 1: '🟡 รอดำเนินการ', 2: '🔵 กำลังซ่อม', 3: '🟢 ซ่อมเสร็จแล้ว' };
+        repairs.filter(j => j.name.toLowerCase().includes(sVal) || j.jobNo.toLowerCase().includes(sVal)).forEach(j => {
+            cont.innerHTML += `<div class="repair-card status-${j.status}"><span class="badge badge-${j.status}">${labels[j.status]}</span><strong>#${j.jobNo}</strong><br><small>${j.date} | โดย: ${j.name} (${j.dept})</small><p style="margin:10px 0;"><strong>${j.type}</strong>: ${j.detail}</p>${j.note ? `<div style="font-size:0.85rem; background:#eee; padding:8px; border-radius:8px;">ช่าง: ${j.note}</div>` : ''}${j.img ? `<img src="${j.img}" class="proof-img">` : ''}${currentRole === 'admin' ? `<button class="btn-login" onclick="openAdminModal(${j.id})" style="margin-top:10px; padding:8px;">จัดการงาน</button>` : ''}</div>`;
+        });
+    }
+
+    function openAdminModal(id) {
+        const j = repairs.find(x => x.id == id);
+        document.getElementById('m-id').value = id;
+        document.getElementById('m-job-no').innerText = j.jobNo;
+        document.getElementById('m-status').value = j.status;
+        document.getElementById('m-note').value = j.note;
+        document.getElementById('admin-modal').style.display = 'block';
+    }
+
+    function saveUpdate() {
+        const id = document.getElementById('m-id').value;
+        const idx = repairs.findIndex(x => x.id == id);
+        const file = document.getElementById('m-img').files[0];
+        const update = () => { repairs[idx].status = parseInt(document.getElementById('m-status').value); repairs[idx].note = document.getElementById('m-note').value; localStorage.setItem('fixit_final_full_db', JSON.stringify(repairs)); document.getElementById('admin-modal').style.display = 'none'; render(); };
+        if(file) { const r = new FileReader(); r.onloadend = () => { repairs[idx].img = r.result; update(); }; r.readAsDataURL(file); } else { update(); }
+    }
+
+    function logout() { location.reload(); }
+</script>
+</body>
+</html>
