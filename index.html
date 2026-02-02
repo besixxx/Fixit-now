@@ -2,7 +2,12 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    
     <title>FixIt Now - Pro Full Version</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -31,17 +36,17 @@
         .profile-btn { font-size: 1.8rem; cursor: pointer; position: relative; }
         #user-dropdown {
             display: none; position: absolute; right: 0; top: 50px;
-            background: white; min-width: 220px; border-radius: 15px;
+            background: white; min-width: 250px; border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #eee;
             z-index: 2000; overflow: hidden;
         }
-        .dropdown-content { display: flex; flex-direction: column; padding: 15px; gap: 12px; }
+        .dropdown-content { display: flex; flex-direction: column; padding: 15px; gap: 10px; }
         .user-info { text-align: center; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
         .user-info b { display: block; color: #333; font-size: 1rem; }
         .user-info small { color: #2196F3; font-weight: bold; font-size: 0.85rem; }
         .logout-btn-box { background: #fff5f5; color: #d32f2f; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: bold; font-size: 0.9rem; }
 
-        /* 3. Form & Dashboard Layout */
+        /* 3. Form & Layout */
         .container { padding: 15px; max-width: 500px; margin: auto; }
         .page { display: none; }
         .active { display: block; animation: fadeIn 0.3s; }
@@ -57,7 +62,7 @@
         .bg-pending { background: var(--pending); }
         .bg-success { background: var(--success); }
         .stat-box b { font-size: 1.8rem; display: block; }
-
+        
         /* 4. Repair List & Cards */
         .repair-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 8px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; }
         .status-1 { border-left-color: var(--pending); }
@@ -121,8 +126,7 @@
     </header>
 
     <div class="container">
-        <div id="p-main" class="page active">
-            </div>
+        <div id="p-main" class="page active"></div>
 
         <div id="p-list" class="page">
             <div id="admin-tools" style="display:none; margin-bottom:15px;">
@@ -179,7 +183,7 @@
     // --- Dropdown Logic ---
     const profileBtn = document.getElementById('profileBtn');
     const dropdown = document.getElementById('user-dropdown');
-    profileBtn.onclick = (e) => { e.stopPropagation(); dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block'; };
+    profileBtn.onclick = (e) => { e.stopPropagation(); dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block'; };
     document.onclick = () => dropdown.style.display = 'none';
 
     function checkAuth() {
@@ -195,7 +199,6 @@
         } else { document.getElementById('l-err').style.display = 'block'; }
     }
 
-    // ฟังก์ชันจัดการเนื้อหาหน้าหลักตาม Role
     function updateMainContent() {
         const pMain = document.getElementById('p-main');
         const navText = document.getElementById('nav-text');
@@ -206,6 +209,7 @@
             navIcon.className = "fa fa-chart-pie";
             const pending = repairs.filter(j => j.status === 1).length;
             const completed = repairs.filter(j => j.status === 3).length;
+            const efficiency = repairs.length ? Math.round((completed/repairs.length)*100) : 0;
             pMain.innerHTML = `
                 <div class="card" style="text-align:center;">
                     <h3>📊 ภาพรวมระบบแจ้งซ่อม</h3>
@@ -214,13 +218,12 @@
                         <div class="stat-box bg-success"><b>${completed}</b><small>ซ่อมเสร็จ</small></div>
                     </div>
                     <div style="margin-top:20px; text-align:left;">
-                        <label>ประสิทธิภาพการซ่อม: <b>${repairs.length ? Math.round((completed/repairs.length)*100) : 0}%</b></label>
+                        <label>ประสิทธิภาพการซ่อม: <b>${efficiency}%</b></label>
                         <div style="background:#eee; height:10px; border-radius:5px; margin-top:5px;">
-                            <div style="background:#4CAF50; width:${repairs.length ? (completed/repairs.length)*100 : 0}%; height:100%; border-radius:5px;"></div>
+                            <div style="background:#4CAF50; width:${efficiency}%; height:100%; border-radius:5px;"></div>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
             document.getElementById('admin-tools').style.display = 'block';
         } else {
             navText.innerText = "แจ้งซ่อม";
@@ -228,15 +231,14 @@
             pMain.innerHTML = `
                 <div class="card">
                     <h3>📝 รายละเอียดการแจ้งปัญหา</h3>
-                    <form id="repair-form" onsubmit="handleFormSubmit(event)">
+                    <form onsubmit="handleFormSubmit(event)">
                         <div class="input-group"><label>ชื่อผู้แจ้ง</label><input type="text" id="f-name" placeholder="ระบุชื่อ-นามสกุล" required></div>
                         <div class="input-group"><label>แผนก / ชั้น</label><select id="f-dept"><option>ไอที / คอมพิวเตอร์</option><option>ธุรการ / ประชาสัมพันธ์</option><option>บัญชี / การเงิน</option><option>อาคาร / ส่วนกลาง</option></select></div>
                         <div class="input-group"><label>ประเภทปัญหา</label><select id="f-type"><option>คอมพิวเตอร์/ไอที</option><option>เครื่องใช้ไฟฟ้า</option><option>งานประปา</option></select></div>
                         <div class="input-group"><label>รายละเอียดปัญหา</label><textarea id="f-detail" rows="3" placeholder="ระบุอาการชำรุด..." required></textarea></div>
                         <button type="submit" class="btn-login">ส่งข้อมูลแจ้งซ่อม</button>
                     </form>
-                </div>
-            `;
+                </div>`;
             document.getElementById('admin-tools').style.display = 'none';
         }
         show('p-main', navText.innerText, document.getElementById('nav-home'));
@@ -247,7 +249,7 @@
         const job = { id: Date.now(), jobNo: 'F'+Math.floor(1000+Math.random()*9000), name: document.getElementById('f-name').value, dept: document.getElementById('f-dept').value, type: document.getElementById('f-type').value, detail: document.getElementById('f-detail').value, status: 1, date: new Date().toLocaleDateString('th-TH'), note: '', img: '' };
         repairs.unshift(job);
         localStorage.setItem('fixit_final_full_db', JSON.stringify(repairs));
-        alert('ส่งเรื่องแจ้งซ่อมเรียบร้อย!');
+        alert('ส่งเรื่องเรียบร้อย!');
         show('p-list', 'รายการทั้งหมด', document.querySelectorAll('.nav-item')[1]);
     }
 
@@ -288,6 +290,13 @@
     }
 
     function logout() { location.reload(); }
+
+    // ลงทะเบียน Service Worker สำหรับ PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js');
+        });
+    }
 </script>
 </body>
 </html>
