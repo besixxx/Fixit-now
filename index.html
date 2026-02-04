@@ -16,71 +16,64 @@
         :root { --pending: #FFC107; --progress: #2196F3; --success: #4CAF50; --bg: #f4f7f6; --primary: #2196F3; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* 0. Splash Screen */
+        /* Splash Screen */
         #splash { position: fixed; inset: 0; background: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; color: white; transition: 0.5s; }
         .splash-logo { font-size: 60px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* 1. Login Page */
+        /* Login Page */
         #login-page { position: fixed; inset: 0; background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 15px; }
-        .login-card { background: white; width: 100%; max-width: 320px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .login-card { background: white; width: 100%; max-width: 320px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .login-group { text-align: left; margin-bottom: 12px; }
         .login-group label { display: block; margin-bottom: 4px; font-weight: bold; color: #666; font-size: 0.8rem; }
         .login-group input { width: 100%; padding: 10px; border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 0.9rem; }
         .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        /* 2. Header & Dropdown */
+        /* Header & Dropdown */
         #main-app { display: none; padding-bottom: 80px; }
         header { background: var(--primary); color: white; padding: 12px 15px; font-weight: bold; position: sticky; top: 0; z-index: 1500; display: flex; justify-content: space-between; align-items: center; }
         .profile-btn { font-size: 1.6rem; cursor: pointer; position: relative; }
         #user-dropdown { display: none; position: absolute; right: 0; top: 50px; background: white; min-width: 220px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid #eee; z-index: 2000; overflow: hidden; }
         .dropdown-content { display: flex; flex-direction: column; padding: 15px; gap: 10px; }
         .user-info { text-align: center; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; }
-        .user-info b { display: block; color: #333; font-size: 0.9rem; }
-        .user-info small { color: var(--primary); font-weight: bold; font-size: 0.75rem; }
-        .logout-btn-box { background: #fff5f5; color: #d32f2f; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: bold; font-size: 0.85rem; }
+        .user-info b { display: block; color: var(--primary); font-size: 1.1rem; }
+        .logout-btn-box { background: #fff5f5; color: #d32f2f; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: bold; font-size: 0.85rem; border: none; width: 100%; }
 
-        /* 3. Container & Layout */
         .container { padding: 12px; max-width: 500px; margin: auto; }
         .page { display: none; }
         .active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: white; padding: 18px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
 
-        /* Dashboard Stats */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; margin-bottom: 15px; }
         .stat-box { padding: 15px; border-radius: 12px; text-align: center; color: white; }
         .bg-pending { background: var(--pending); }
         .bg-success { background: var(--success); }
         .stat-box b { font-size: 1.5rem; display: block; }
-        .stat-box small { font-size: 0.75rem; }
-
-        /* 4. Repair Cards */
-        .repair-card { background: white; border-radius: 15px; padding: 12px; margin-bottom: 12px; border-left: 8px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; font-size: 0.85rem; }
-        .badge { float: right; padding: 3px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: bold; color: white; }
+        
+        .repair-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border-left: 8px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: left; }
+        .badge { float: right; padding: 4px 10px; border-radius: 15px; font-size: 0.7rem; font-weight: bold; color: white; }
         .badge-1 { background: var(--pending); }
         .badge-2 { background: var(--progress); }
         .badge-3 { background: var(--success); }
         .proof-img { width: 100%; height: auto; max-height: 180px; object-fit: cover; border-radius: 10px; margin-top: 8px; border: 1px solid #eee; }
 
-        /* 5. Nav Bar */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; padding: 8px 0 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
         .nav-item { flex: 1; text-align: center; color: #aaa; font-size: 0.7rem; cursor: pointer; }
         .nav-item.active-nav { color: var(--primary); }
         .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 2px; }
 
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 0.9rem; }
         .input-group { margin-bottom: 12px; text-align: left; }
         .input-group label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 0.9rem; }
 
-        /* Toast & Modal */
+        .modal { display: none; position: fixed; z-index: 3000; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 90%; max-width: 340px; padding: 20px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        
         .toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 100px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 100px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 100px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
-        .modal { display: none; position: fixed; z-index: 3000; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 90%; max-width: 350px; padding: 20px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -106,8 +99,12 @@
             <i class="fa fa-user-circle"></i>
             <div id="user-dropdown">
                 <div class="dropdown-content">
-                    <div class="user-info"><b id="display-name">ชื่อผู้ใช้งาน</b><small id="display-role" style="display:block; color:var(--primary);"></small></div>
-                    <div class="logout-btn-box" onclick="logout()"><i class="fa fa-sign-out-alt"></i><span>ออกจากระบบ</span></div>
+                    <div class="user-info">
+                        <b id="display-role">ตำแหน่ง</b>
+                    </div>
+                    <button class="logout-btn-box" onclick="logout()">
+                        <i class="fa fa-sign-out-alt"></i> ออกจากระบบ
+                    </button>
                 </div>
             </div>
         </div>
@@ -117,7 +114,7 @@
         <div id="p-main" class="page active"></div>
         <div id="p-list" class="page">
             <div id="admin-tools" style="display:none; margin-bottom:12px;">
-                <input type="text" id="search" placeholder="ค้นหาชื่องาน..." onkeyup="render()" style="border: 1px solid #ddd; padding: 10px;">
+                <input type="text" id="search" placeholder="ค้นหาชื่องานหรือเลขงาน..." onkeyup="render()" style="border: 1px solid #ddd; padding: 10px;">
             </div>
             <div id="list-container"></div>
         </div>
@@ -127,7 +124,7 @@
         <div class="nav-item active-nav" id="nav-home" onclick="updateMainContent()">
             <i id="nav-icon" class="fa fa-edit"></i><span id="nav-text">แจ้งซ่อม</span>
         </div>
-        <div class="nav-item" onclick="show('p-list','รายการทั้งหมด',this)"><i class="fa fa-tasks"></i>รายการ</div>
+        <div class="nav-item" id="nav-list" onclick="show('p-list','รายการทั้งหมด',this)"><i class="fa fa-tasks"></i>รายการ</div>
     </nav>
 </div>
 
@@ -152,33 +149,37 @@
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
 <script>
-    // Firebase Configuration จากที่คุณให้มา
+    // 1. Firebase Config
     const firebaseConfig = {
-        apiKey: "AIzaSyCpbS6L2MQtG0rNALx5Dkmt3PGGOLIzo-o",
-        authDomain: "fixit-90312.firebaseapp.com",
-        databaseURL: "https://fixit-90312-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "fixit-90312",
-        storageBucket: "fixit-90312.firebasestorage.app",
-        messagingSenderId: "872190458554",
-        appId: "1:872190458554:web:8659d92493abc3b88ee083",
-        measurementId: "G-4G8DG6GRV9"
+      apiKey: "AIzaSyCpbS6L2MQtG0rNALx5Dkmt3PGGOLIzo-o",
+      authDomain: "fixit-90312.firebaseapp.com",
+      databaseURL: "https://fixit-90312-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "fixit-90312",
+      storageBucket: "fixit-90312.firebasestorage.app",
+      messagingSenderId: "872190458554",
+      appId: "1:872190458554:web:8659d92493abc3b88ee083",
+      measurementId: "G-4G8DG6GRV9"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const repairRef = db.ref('repairs');
 
-    // Setup & Splash
+    // นำชื่อออก เหลือแต่ตำแหน่ง
+    const usersDB = {
+        "user1": { pass: "1111", role: "user", roleName: "พนักงานทั่วไป" },
+        "admin1": { pass: "9999", role: "admin", roleName: "แอดมิน / ช่าง" }
+    };
+    
+    let repairs = [];
+    let currentRole = "";
+
     window.addEventListener('load', () => setTimeout(() => { 
         const sp = document.getElementById('splash'); 
         if(sp) { sp.style.opacity = '0'; setTimeout(() => sp.style.display = 'none', 500); } 
     }, 1500));
 
-    const usersDB = {"user1": { pass: "1111", role: "user", name: "คุณสมชาย" },"admin1": { pass: "9999", role: "admin", name: "ช่างวิชัย" }};
-    let repairs = [];
-    let currentRole = "";
-
-    // Realtime Listener
+    // Real-time Update จาก Firebase
     repairRef.on('value', (snapshot) => {
         const data = snapshot.val();
         repairs = data ? Object.values(data).reverse() : [];
@@ -198,8 +199,8 @@
         const p = document.getElementById('p-input').value;
         if(usersDB[u] && usersDB[u].pass === p) {
             currentRole = usersDB[u].role;
-            document.getElementById('display-name').innerText = usersDB[u].name;
-            document.getElementById('display-role').innerText = currentRole === 'admin' ? "แอดมิน/ช่าง" : "พนักงานทั่วไป";
+            // แสดงเฉพาะตำแหน่งงานในโปรไฟล์
+            document.getElementById('display-role').innerText = usersDB[u].roleName;
             document.getElementById('login-page').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             updateMainContent();
@@ -258,7 +259,7 @@
                         </div>
                         <div class="input-group"><label>แนบรูปภาพปัญหา</label><input type="file" id="f-user-img" accept="image/*" capture="environment"></div>
                         <div class="input-group"><label>รายละเอียดปัญหา</label><textarea id="f-detail" rows="3" placeholder="ระบุอาการชำรุด..." required></textarea></div>
-                        <button type="submit" class="btn-login" id="btn-submit">ส่งข้อมูลแจ้งซ่อม</button>
+                        <button type="submit" id="btn-submit" class="btn-login">ส่งข้อมูลแจ้งซ่อม</button>
                     </form>
                 </div>`;
             document.getElementById('admin-tools').style.display = 'none';
@@ -281,8 +282,8 @@
         const job = { id, jobNo: 'F'+Math.floor(1000+Math.random()*9000), name: document.getElementById('f-name').value, dept: document.getElementById('f-dept').value, detail: document.getElementById('f-detail').value, type: document.getElementById('f-type').value || "ทั่วไป", status: 1, date: new Date().toLocaleDateString('th-TH'), img: imgData, note: '' };
         
         repairRef.child(id).set(job).then(() => {
-            showToast("✅ แจ้งซ่อมออนไลน์สำเร็จ!");
-            show('p-list', 'รายการทั้งหมด', document.querySelectorAll('.nav-item')[1]);
+            showToast("✅ แจ้งซ่อมสำเร็จ!");
+            show('p-list', 'รายการทั้งหมด', document.getElementById('nav-list'));
         });
     }
 
@@ -300,11 +301,11 @@
         const sVal = document.getElementById('search').value.toLowerCase();
         cont.innerHTML = '';
         const lbs = { 1: '🟡 รอดำเนินการ', 2: '🔵 กำลังซ่อม', 3: '🟢 เสร็จสิ้น' };
-        repairs.filter(j => j.name.toLowerCase().includes(sVal) || j.jobNo.toLowerCase().includes(sVal)).forEach(j => {
+        repairs.filter(j => (j.name || "").toLowerCase().includes(sVal) || (j.jobNo || "").toLowerCase().includes(sVal)).forEach(j => {
             cont.innerHTML += `<div class="repair-card status-${j.status}">
                 <span class="badge badge-${j.status}">${lbs[j.status]}</span>
                 <strong>#${j.jobNo}</strong><br><small>${j.date} | โดย: ${j.name} (${j.dept})</small>
-                <p style="margin:8px 0;">${j.detail}</p>
+                <p style="margin:8px 0;"><strong>${j.type || 'ทั่วไป'}</strong>: ${j.detail}</p>
                 ${j.img ? `<img src="${j.img}" class="proof-img">` : ''}
                 ${j.note ? `<div style="font-size:0.8rem; background:#eee; padding:8px; border-radius:10px; margin-top:8px;">ช่าง: ${j.note}</div>` : ''}
                 ${currentRole === 'admin' ? `<button class="btn-login" onclick="openAdminModal('${j.id}')" style="margin-top:10px; padding:8px; font-size:0.85rem;">จัดการงาน</button>` : ''}
@@ -327,15 +328,12 @@
         const id = document.getElementById('m-id').value;
         const file = document.getElementById('m-img').files[0];
         let updateData = { status: parseInt(document.getElementById('m-status').value), note: document.getElementById('m-note').value };
-        
         document.getElementById('btn-save-update').innerText = "กำลังบันทึก...";
-        
         if (file) {
             updateData.img = await new Promise(r => { const reader = new FileReader(); reader.onload = (e) => r(e.target.result); reader.readAsDataURL(file); });
         }
-        
         repairRef.child(id).update(updateData).then(() => {
-            showToast("💾 อัปเดตข้อมูลออนไลน์แล้ว");
+            showToast("💾 บันทึกข้อมูลสำเร็จ");
             closeModal();
             document.getElementById('btn-save-update').innerText = "บันทึกข้อมูล";
         });
